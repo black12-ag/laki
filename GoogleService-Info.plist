@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>701952682899-e4crdjg1cenmn45omf7t2q66ah7spcei.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.701952682899-e4crdjg1cenmn45omf7t2q66ah7spcei</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC7c9I5CUFpbPsCVIhPPo6pVCu44H_Qfqc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>701952682899</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.lakiremit.app</string>
+	<key>PROJECT_ID</key>
+	<string>ethio-viral-d509e</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ethio-viral-d509e.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:701952682899:ios:5fbac68204309b80ee1666</string>
+	<key>DATABASE_URL</key>
+	<string>https://ethio-viral-d509e-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>
