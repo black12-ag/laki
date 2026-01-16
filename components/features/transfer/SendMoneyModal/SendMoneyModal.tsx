@@ -324,12 +324,22 @@ export function SendMoneyModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: '#000', // Matches app bg
+    backgroundColor: 'rgba(0,0,0,0.6)', // Semi-transparent dim like Auth modal
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   container: {
-    flex: 1,
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 24,
     padding: 20,
-    marginTop: Platform.OS === 'ios' ? 40 : 20, // SafeArea
+    maxHeight: '85%', // Prevent it from being too tall on small screens
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 10,
   },
   header: {
     flexDirection: 'row',

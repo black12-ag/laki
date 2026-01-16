@@ -37,9 +37,22 @@ export function AmountInputCard({
             style={styles.input}
             value={amount}
             onChangeText={(text) => {
-                // Remove leading zeros: "05" -> "5", but keep "0." or "0"
+                // Allow empty string to fully clear input
+                if (text === '') {
+                    onAmountChange('');
+                    return;
+                }
+                
+                // Prevent multiple decimals
+                if ((text.match(/\./g) || []).length > 1) return;
+
+                // Handle leading zeros
                 if (text.length > 1 && text.startsWith('0') && text[1] !== '.') {
-                    onAmountChange(text.substring(1));
+                    // "05" -> "5"
+                    onAmountChange(text.replace(/^0+/, ''));
+                } else if (text.startsWith('.')) {
+                    // ".5" -> "0.5"
+                    onAmountChange('0' + text);
                 } else {
                     onAmountChange(text);
                 }
