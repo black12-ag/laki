@@ -90,7 +90,7 @@ export default function HomeScreen() {
     selectBank,
     updateAmount,
   } = useBankRates();
-  const { user, signIn, signUp, signOut, signInWithGoogle, signInWithApple } = useAuth();
+  const { user, signIn, signUp, signOut, signInWithGoogle, signInWithApple, resetPassword } = useAuth();
   const { toggleTheme } = useThemeActions();
 
   const [showSignIn, setShowSignIn] = useState(false);
@@ -285,9 +285,7 @@ export default function HomeScreen() {
           await signInWithApple();
           setShowSignIn(false);
         }}
-        onForgotPassword={() => {
-          alert("Forgot password - check your email for reset link");
-        }}
+        onResetPassword={resetPassword}
       />
 
       {/* Profile Modal */}

@@ -9,6 +9,7 @@ import {
   signInWithCredential,
   updateProfile,
   signInAnonymously,
+  sendPasswordResetEmail,
   User
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
@@ -27,6 +28,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   signInAsGuest: () => Promise<void>;
@@ -99,6 +101,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resetPassword = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error: any) {
+      console.error("Reset password error:", error);
+      throw error;
+    }
+  };
+
   const signInWithGoogle = async () => {
     try {
       if (promptAsync) {
@@ -165,7 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signInWithGoogle, signInWithApple, signInAsGuest, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, resetPassword, signInWithGoogle, signInWithApple, signInAsGuest, signOut }}>
       {children}
     </AuthContext.Provider>
   );

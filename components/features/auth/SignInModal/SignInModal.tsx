@@ -25,6 +25,7 @@ export interface SignInModalProps {
   onSignInWithGoogle?: () => void;
   onSignInWithApple?: () => void;
   onForgotPassword?: () => void;
+  onResetPassword?: (email: string) => Promise<void>;
 }
 
 export function SignInModal({
@@ -34,11 +35,13 @@ export function SignInModal({
   onSignUp,
   onSignInWithGoogle,
   onSignInWithApple,
-  onForgotPassword,
+  onForgotPassword, // Deprecated/Used as trigger if needed, but we handle internally now
+  onResetPassword,
 }: SignInModalProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   
   // Dynamic Colors
   const bgColor = isDark ? '#1E1E1E' : '#FFFFFF';
@@ -60,18 +63,25 @@ export function SignInModal({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Reset form when modal closes or mode changes
   const resetForm = () => {
     setFullName('');
     setEmail('');
     setPassword('');
     setConfirmPassword('');
     setIsLoading(false);
+    // Note: We don't reset 'isResetting' here to keep the view stable if just clearing fields
   };
 
   const handleSubmit = async () => {
     // Validation
-    if (!email || !password) {
-        Alert.alert('Error', 'Please fill in all required fields');
+    if (!email) {
+       Alert.alert('Error', 'Please enter your email address');
+       return;
+    }
+
+    if (!isResetting && !password) {
+        Alert.alert('Error', 'Please enter your password');
         return;
     }
 
@@ -88,14 +98,19 @@ export function SignInModal({
 
     setIsLoading(true);
     try {
-      if (isRegistering) {
+      if (isResetting) {
+        await onResetPassword?.(email);
+        Alert.alert('Success', 'Password reset email sent! Check your inbox.');
+        setIsResetting(false); // Go back to login on success
+      } else if (isRegistering) {
         await onSignUp?.(email, password, fullName);
       } else {
         await onSignIn?.(email, password);
       }
       resetForm();
     } catch (error: any) {
-      Alert.alert(isRegistering ? 'Registration Failed' : 'Sign In Failed', error.message || 'An error occurred');
+      const action = isResetting ? 'Reset Failed' : (isRegistering ? 'Registration Failed' : 'Sign In Failed');
+      Alert.alert(action, error.message || 'An error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -103,6 +118,19 @@ export function SignInModal({
 
   const toggleMode = () => {
       setIsRegistering(!isRegistering);
+      setIsResetting(false);
+      resetForm();
+  };
+
+  const handleForgotPasswordPress = () => {
+      setIsResetting(true);
+      setIsRegistering(false);
+      resetForm();
+  };
+
+  const backToSignIn = () => {
+      setIsResetting(false);
+      setIsRegistering(false);
       resetForm();
   };
 
@@ -112,40 +140,52 @@ export function SignInModal({
         <View style={[styles.container, { backgroundColor: bgColor }]}>
           
           {/* Header & Lock Icon - Only show in Login mode or if enough space */}
-          {!isRegistering && (
+          {!isRegistering && !isResetting && (
              <View style={styles.header}>
                <View style={[styles.lockIconContainer, { borderColor: bgColor }]}>
                  <Ionicons name="lock-closed" size={24} color="#FFF" />
                </View>
              </View>
           )}
+
+          {/* Reset Password Header */}
+          {isResetting && (
+              <View style={{ alignItems: 'center', marginBottom: 20 }}>
+                  <Text style={{ fontSize: 20, fontWeight: '700', color: textColor, marginBottom: 8 }}>Reset Password</Text>
+                  <Text style={{ fontSize: 14, color: subTextColor, textAlign: 'center' }}>Enter your email to receive a reset link</Text>
+              </View>
+          )}
           
           <TouchableOpacity onPress={onClose} style={[styles.closeButton, { backgroundColor: isDark ? '#333' : '#F5F5F5' }]}>
               <Ionicons name="close" size={18} color={isDark ? '#AAA' : '#666'} />
           </TouchableOpacity>
 
-          {/* Social Buttons */}
-          <TouchableOpacity style={[
-            styles.socialButton, 
-            { backgroundColor: buttonBg, borderColor: buttonBorder }
-          ]} onPress={onSignInWithGoogle}>
-            <GoogleLogo />
-            <Text style={[styles.socialButtonText, { color: textColor }]}>  Continue with Google</Text>
-          </TouchableOpacity>
+          {/* Social Buttons - Hide when resetting */}
+          {!isResetting && (
+              <>
+                <TouchableOpacity style={[
+                    styles.socialButton, 
+                    { backgroundColor: buttonBg, borderColor: buttonBorder }
+                ]} onPress={onSignInWithGoogle}>
+                    <GoogleLogo />
+                    <Text style={[styles.socialButtonText, { color: textColor }]}>  Continue with Google</Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity style={[
-            styles.socialButton, 
-            { backgroundColor: buttonBg, borderColor: buttonBorder }
-          ]} onPress={onSignInWithApple}>
-            <Ionicons name="logo-apple" size={20} color={textColor} />
-            <Text style={[styles.socialButtonText, { color: textColor }]}>  Continue with Apple</Text>
-          </TouchableOpacity>
+                <TouchableOpacity style={[
+                    styles.socialButton, 
+                    { backgroundColor: buttonBg, borderColor: buttonBorder }
+                ]} onPress={onSignInWithApple}>
+                    <Ionicons name="logo-apple" size={20} color={textColor} />
+                    <Text style={[styles.socialButtonText, { color: textColor }]}>  Continue with Apple</Text>
+                </TouchableOpacity>
 
-          <View style={styles.dividerContainer}>
-            <View style={[styles.divider, { backgroundColor: inputBorder }]} />
-            <Text style={styles.orText}>OR</Text>
-            <View style={[styles.divider, { backgroundColor: inputBorder }]} />
-          </View>
+                <View style={styles.dividerContainer}>
+                    <View style={[styles.divider, { backgroundColor: inputBorder }]} />
+                    <Text style={styles.orText}>OR</Text>
+                    <View style={[styles.divider, { backgroundColor: inputBorder }]} />
+                </View>
+              </>
+          )}
 
           {/* Input Fields */}
           {isRegistering && (
@@ -180,23 +220,27 @@ export function SignInModal({
             autoCapitalize="none"
           />
 
-          <Text style={[styles.label, { color: textColor }]}>Password</Text>
-          <View style={[styles.passwordInputContainer, { 
-              backgroundColor: inputBg, 
-              borderColor: inputBorder 
-          }]}>
-            <TextInput
-              placeholder="Password"
-              style={[styles.passwordInput, { color: textColor }]}
-              placeholderTextColor={subTextColor}
-              secureTextEntry={!showPassword}
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-               <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color={subTextColor} />
-            </TouchableOpacity>
-          </View>
+          {!isResetting && (
+              <>
+                <Text style={[styles.label, { color: textColor }]}>Password</Text>
+                <View style={[styles.passwordInputContainer, { 
+                    backgroundColor: inputBg, 
+                    borderColor: inputBorder 
+                }]}>
+                    <TextInput
+                    placeholder="Password"
+                    style={[styles.passwordInput, { color: textColor }]}
+                    placeholderTextColor={subTextColor}
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color={subTextColor} />
+                    </TouchableOpacity>
+                </View>
+              </>
+          )}
 
           {isRegistering && (
              <>
@@ -220,15 +264,15 @@ export function SignInModal({
              </>
           )}
 
-          {!isRegistering && (
-            <TouchableOpacity onPress={onForgotPassword} style={styles.forgotPassword}>
+          {!isRegistering && !isResetting && (
+            <TouchableOpacity onPress={handleForgotPasswordPress} style={styles.forgotPassword}>
                 <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           )}
 
           {/* Action Button */}
           <TouchableOpacity 
-            style={[styles.actionButton, isLoading && styles.disabledButton, isRegistering && { marginTop: 24 }]} 
+            style={[styles.actionButton, isLoading && styles.disabledButton, (isRegistering || isResetting) && { marginTop: 24 }]} 
             onPress={handleSubmit}
             disabled={isLoading}
           >
@@ -236,20 +280,28 @@ export function SignInModal({
               <ActivityIndicator color="#FFF" />
             ) : (
               <Text style={styles.actionButtonText}>
-                  {isRegistering ? 'Sign up' : 'Sign in'}
+                  {isResetting ? 'Send Reset Link' : (isRegistering ? 'Sign up' : 'Sign in')}
               </Text>
             )}
           </TouchableOpacity>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>
-                {isRegistering ? 'Already have an account? ' : "Don't you have an account? "}
-            </Text>
-            <TouchableOpacity onPress={toggleMode}>
-              <Text style={styles.linkText}>
-                  {isRegistering ? 'Sign in' : 'Register'}
-              </Text>
-            </TouchableOpacity>
+            {isResetting ? (
+                <TouchableOpacity onPress={backToSignIn}>
+                    <Text style={styles.linkText}>Back to Sign In</Text>
+                </TouchableOpacity>
+            ) : (
+                <>
+                    <Text style={styles.footerText}>
+                        {isRegistering ? 'Already have an account? ' : "Don't you have an account? "}
+                    </Text>
+                    <TouchableOpacity onPress={toggleMode}>
+                    <Text style={styles.linkText}>
+                        {isRegistering ? 'Sign in' : 'Register'}
+                    </Text>
+                    </TouchableOpacity>
+                </>
+            )}
           </View>
 
         </View>
