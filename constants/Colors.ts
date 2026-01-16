@@ -50,43 +50,43 @@ export const Colors = {
     primaryDark: "#388E3C",
     primaryLight: "#1B5E20",
 
-    // Background Colors
-    background: "#121212",
-    backgroundSecondary: "#000000",
-    cardBackground: "#1E1E1E",
+    // Background Colors - True Black (OLED Friendly)
+    background: "#000000",
+    backgroundSecondary: "#1C1C1E",
+    cardBackground: "#1C1C1E",
 
-    // Text Colors
+    // Text Colors - High Contrast
     text: "#FFFFFF",
-    textSecondary: "#A0A0A0",
-    textMuted: "#666666",
+    textSecondary: "#98989F", // iOS System Gray equivalent
+    textMuted: "#636366",
 
     // Accent Colors
     accent: "#4CAF50",
-    accentLight: "#1B5E20",
+    accentLight: "#1C1C1E",
 
     // Card Gradients
-    cardGradientStart: "#2C2C2C",
-    cardGradientEnd: "#333333",
+    cardGradientStart: "#1C1C1E",
+    cardGradientEnd: "#2C2C2E",
 
     // Status Colors
-    success: "#4CAF50",
-    warning: "#FFA726",
-    error: "#EF5350",
-    info: "#29B6F6",
+    success: "#32D74B", // iOS Green
+    warning: "#FFD60A", // iOS Yellow
+    error: "#FF453A",   // iOS Red
+    info: "#64D2FF",    // iOS Blue
 
     // Border Colors
-    border: "#2C2C2C",
-    borderLight: "#333333",
+    border: "#38383A",
+    borderLight: "#2C2C2E",
 
     // Tab Bar
-    tabIconDefault: "#666666",
+    tabIconDefault: "#8E8E93",
     tabIconSelected: "#4CAF50",
 
     // Specific UI Elements
     lockIconBackground: "#4CAF50",
-    bankCardBorder: "#333333",
-    rateTagBackground: "#1B5E20",
-    rateTagText: "#4CAF50",
+    bankCardBorder: "#2C2C2E",
+    rateTagBackground: "#2C2C2E",
+    rateTagText: "#32D74B",
   },
 };
 
