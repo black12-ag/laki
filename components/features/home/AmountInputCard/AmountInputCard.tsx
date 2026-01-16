@@ -37,24 +37,25 @@ export function AmountInputCard({
             style={styles.input}
             value={amount}
             onChangeText={(text) => {
-                // Allow empty string to fully clear input
-                if (text === '') {
-                    onAmountChange('');
-                    return;
-                }
+                // Remove non-numeric chars except dot
+                const cleanText = text.replace(/[^0-9.]/g, '');
                 
-                // Prevent multiple decimals
-                if ((text.match(/\./g) || []).length > 1) return;
-
-                // Handle leading zeros
-                if (text.length > 1 && text.startsWith('0') && text[1] !== '.') {
-                    // "05" -> "5"
-                    onAmountChange(text.replace(/^0+/, ''));
-                } else if (text.startsWith('.')) {
-                    // ".5" -> "0.5"
-                    onAmountChange('0' + text);
+                if (cleanText === '') {
+                    onAmountChange('');
+                } else if (cleanText === '.') {
+                    onAmountChange('0.');
+                } else if (!cleanText.includes('.')) {
+                    // Integer: Remove leading zeros (e.g., '05' -> '5', '00' -> '0')
+                    onAmountChange(parseFloat(cleanText).toString());
                 } else {
-                    onAmountChange(text);
+                    // Decimal: Keep as is for '0.5' etc
+                     // Handle cases like '00.5' -> '0.5'
+                     const parts = cleanText.split('.');
+                     if (parts[0].length > 1 && parts[0].startsWith('0')) {
+                        onAmountChange(parseFloat(parts[0]).toString() + '.' + parts[1]);
+                     } else {
+                        onAmountChange(cleanText);
+                     }
                 }
             }}
             keyboardType="decimal-pad"
