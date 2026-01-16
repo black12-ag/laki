@@ -42,6 +42,12 @@
         "projectId": "e35a8cb3-4888-4d01-840f-a91d5404f942"
       }
     },
-    "owner": "muay01111"
+    "owner": "muay01111",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e35a8cb3-4888-4d01-840f-a91d5404f942"
+    }
   }
 }

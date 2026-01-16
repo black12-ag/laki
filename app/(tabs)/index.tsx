@@ -221,8 +221,7 @@ export default function HomeScreen() {
 
           <BankRatesList
             banks={banks}
-            selectedBankId={selectedBank?.id}
-            onSelectBank={selectBank}
+            onBankPress={selectBank}
           />
         </View>
       </ScrollView>
@@ -236,6 +235,7 @@ export default function HomeScreen() {
         convertedAmount={convertedAmount}
         senderName={user?.displayName || ''}
         senderEmail={user?.email || ''}
+        initialBankType={selectedBank?.id === 'abyssinia' ? 'abyssinia' : 'other'}
       />
 
       {/* Transfer Loading */}

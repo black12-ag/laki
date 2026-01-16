@@ -12,6 +12,7 @@ interface SendMoneyModalProps {
   convertedAmount: string;
   senderName?: string;
   senderEmail?: string;
+  initialBankType?: 'abyssinia' | 'other';
 }
 
 export interface TransferData {
@@ -31,6 +32,7 @@ export function SendMoneyModal({
   convertedAmount,
   senderName = '',
   senderEmail = '',
+  initialBankType = 'abyssinia',
 }: SendMoneyModalProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
@@ -50,11 +52,18 @@ export function SendMoneyModal({
   // Form State
   const [formSenderName, setFormSenderName] = useState(senderName);
   const [formSenderEmail, setFormSenderEmail] = useState(senderEmail);
-  const [bankType, setBankType] = useState<'abyssinia' | 'other'>('abyssinia');
+  const [bankType, setBankType] = useState<'abyssinia' | 'other'>(initialBankType);
   const [accountNumber, setAccountNumber] = useState('');
   const [reason, setReason] = useState('');
   const [reasonError, setReasonError] = useState(false);
   
+  // Update bank type when prop changes or modal opens
+  React.useEffect(() => {
+    if (visible && initialBankType) {
+        setBankType(initialBankType);
+    }
+  }, [visible, initialBankType]);
+
   // Steps
   const [step, setStep] = useState<'info' | 'summary'>('info');
   const [recipientName, setRecipientName] = useState('');
