@@ -65,8 +65,12 @@ lakiremit-ios/
    ```
 
 4. **Run on Device**
-   - Scan the QR code with **Expo Go** (Android/iOS).
-   - Press `i` for iOS Simulator or `a` for Android Emulator.
+
+   - **Scan the QR code below** with **Expo Go** (Android/iOS) to run the app instantly without installation:
+
+   <img src="./assets/images/qr-code.png" width="300" alt="LakiRemit Scan Code" />
+
+   - Or press `i` for iOS Simulator / `a` for Android Emulator.
 
 ---
 
