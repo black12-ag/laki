@@ -5,6 +5,11 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Status](https://img.shields.io/badge/Status-Production_Ready-success.svg?style=for-the-badge)]()
 
+<div align="center">
+  <img src="./assets/images/qr-code.png" width="250" alt="LakiRemit Scan Code" />
+  <p><b>Scan with Expo Go</b></p>
+</div>
+
 > A premium, cross-border money transfer application engineered for speed, security, and aesthetic excellence.
 
 ## 📱 Project Overview
@@ -65,12 +70,8 @@ lakiremit-ios/
    ```
 
 4. **Run on Device**
-
-   - **Scan the QR code below** with **Expo Go** (Android/iOS) to run the app instantly without installation:
-
-   <img src="./assets/images/qr-code.png" width="300" alt="LakiRemit Scan Code" />
-
-   - Or press `i` for iOS Simulator / `a` for Android Emulator.
+   - **Scan the QR code above** with **Expo Go**.
+   - Press `i` for iOS Simulator or `a` for Android Emulator.
 
 ---
 

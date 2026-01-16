@@ -38,16 +38,16 @@ export function SendMoneyModal({
   const isDark = colorScheme === 'dark';
   const colors = useThemeColors();
   
-  // Dynamic Colors
-  const bgColor = isDark ? '#1A1A1A' : '#FFFFFF';
-  const textColor = isDark ? '#FFFFFF' : '#1A1A1A';
-  const subTextColor = isDark ? '#888888' : '#666666';
-  const inputBg = isDark ? '#2A2A2A' : '#FFFFFF';
-  const inputBorder = isDark ? '#333333' : '#E0E0E0';
-  const closeBtnBg = isDark ? '#333333' : '#F0F0F0';
-  const closeIconColor = isDark ? '#666' : '#333';
-  const bankOptionBorder = isDark ? '#333333' : '#E0E0E0';
-  const bankOptionText = isDark ? '#888' : '#666';
+  // Dynamic Colors (using global theme)
+  const bgColor = colors.cardBackground;
+  const textColor = colors.text;
+  const subTextColor = colors.textSecondary;
+  const inputBg = isDark ? '#2C2C2E' : '#FFFFFF'; // System Gray 6 (Dark) vs White
+  const inputBorder = colors.border;
+  const closeBtnBg = isDark ? '#3A3A3C' : '#F0F0F0'; // System Gray 5 (Dark)
+  const closeIconColor = colors.textSecondary;
+  const bankOptionBorder = colors.border;
+  const bankOptionText = colors.textSecondary;
 
   // Form State
   const [formSenderName, setFormSenderName] = useState(senderName);
